@@ -1,0 +1,308 @@
+
+<html>
+<head>
+	<title>JS Task</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="style.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ 
+	<script>
+		var emailFlag = 0;
+		function submitt()
+		{
+			var fname, lname, phone, email, pass , rePass;
+			var fnameErr, lnameErr, phoneErr, emailErr, passErr, rePassErr;
+			fnameErr = lnameErr = phoneErr = emailErr = passErr = rePassErr = "";
+			var valid = 0;
+			var flag = 1;
+			nameVal = /^[a-zA-Z\s]*$/;
+			numVal = /^[0-9]*/;
+			emailVal = /^\S+@\S+\.\S+/; 
+			passVal = /^[A-Z][a-zA-Z]*[#?!@$%^&*-]*.{8,}$/;
+			fname = document.getElementById('fn').value;
+			lname = document.getElementById('ln').value;
+			phone = document.getElementById('phone').value;
+			email = document.getElementById('email').value;
+			pass = document.getElementById('pass').value;
+			rePass = document.getElementById('rePass').value;
+			
+			if(fname != "")
+			{
+				if(nameVal.test(fname))
+				{
+					document.getElementById('fn').style.borderColor = "green";
+				}else{
+					document.getElementById('fn').style.borderColor = "red";
+					flag = 0;
+					fnameErr = "First Name only Accept letter and white-space";
+				}
+			}else{
+				fnameErr = "First Name can not be empty";
+				document.getElementById('fn').style.borderColor = "red";
+				flag = 0;
+			}
+			
+			if(lname != "")
+			{
+				if(nameVal.test(lname))
+				{
+					document.getElementById('ln').style.borderColor = "green";
+				}else{
+					document.getElementById('ln').style.borderColor = "red";
+					flag = 0;
+					lnameErr = "Last Name only Accept letter and white-space";
+				}
+			}else{
+				lnameErr = "Last Name can not be empty";
+				document.getElementById('ln').style.borderColor = "red";
+				flag = 0;
+			}
+			
+			if(phone != "")
+			{
+				if(numVal.test(phone))
+				{
+					document.getElementById('phone').style.borderColor = "green";
+				}else{
+					document.getElementById('phone').style.borderColor = "red";
+					flag = 0;
+					phoneErr = "Phone only Accept numbers";
+				}
+			}else{
+				phoneErr = "Phone can not be empty";
+				document.getElementById('phone').style.borderColor = "red";
+				flag = 0;
+			}
+			
+			if(email != "")
+			{
+				if(emailVal.test(email))
+				{
+					document.getElementById('email').style.borderColor = "green";
+				}else{
+					document.getElementById('email').style.borderColor = "red";
+					flag = 0;
+					emailErr = "Email invalid format";
+				}
+			}else{
+				emailErr = "Email can not be empty";
+				document.getElementById('email').style.borderColor = "red";
+				flag = 0;
+			}
+			
+			if(pass != "" && rePass != "")
+			{
+				if(passVal.test(pass))
+				{
+					
+					if(pass == rePass)
+					{
+						document.getElementById('pass').style.borderColor = "green";
+						document.getElementById('rePass').style.borderColor = "green";
+					}else{
+						
+						document.getElementById('rePass').style.borderColor = "red";
+						flag = 0;
+						passErr = "Passwords dont match";
+					}
+				}else{
+					document.getElementById('pass').style.borderColor = "red";
+					document.getElementById('rePass').style.borderColor = "red";
+					flag = 0;
+					passErr = "Invalid Format";
+				}
+			}else if( pass == ""){
+				passErr = "Password can not be empty";
+				document.getElementById('pass').style.borderColor = "red";
+				flag = 0;
+			}else{
+				passErr = "RePassword Can not be empty";
+				document.getElementById('rePass').style.borderColor = "red";
+				flag = 0;
+			}
+
+			if(flag == 0)
+			{
+				document.getElementById("showErr").style.display = "block";
+				document.getElementById('showErr').innerHTML = "<p>" + fnameErr + "<br>" + lnameErr + "<br>" + phoneErr + "<br>" + emailErr + "<br>" + passErr +"</p";
+			}else{
+				document.getElementById("showErr").style.display = "none";
+			}
+				//alert(fnameErr + "\n" + lnameErr + "\n" + phoneErr + "\n" + emailErr + "\n" + passErr);
+			console.log(flag);
+			if(flag == 1 && emailFlag == 0)
+				return true;
+			else
+				return false;
+			//return flag;
+		}
+		
+		function postRequest(strURL) 
+		{
+			var xmlHttp;
+			var flag = false;
+			if (window.XMLHttpRequest) // Mozilla, Safari, ...
+			{ 
+				var xmlHttp = new XMLHttpRequest();
+			} 
+			else if (window.ActiveXObject) // IE 
+			{ 
+				 var xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			else
+			{
+				alert("your browser does not support AJAX");
+				return;
+			}
+			xmlHttp.open('POST', strURL, true);
+			xmlHttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xmlHttp.send(strURL);
+			xmlHttp.onreadystatechange = function() 
+			{
+				if (xmlHttp.readyState == 4 && this.status == 200) 
+				{
+					//console.log(xmlHttp.responseText);
+					if(xmlHttp.responseText == "true")
+					{
+						updatepage();
+						
+					}else{
+						document.getElementById("emailChecker").style.display = "none";
+						emailFlag = 0;
+					}
+				}	
+			}
+			console.log(flag);
+			return flag;
+		}
+		function updatepage()
+		{
+			document.getElementById("emailChecker").style.display = "block";
+			document.getElementById("emailChecker").innerHTML = "<font color='red' size='3'>" + "Email Found" + "</font>";
+			emailFlag = 1;
+			//
+
+		}
+		
+		
+		function emailCheck(str)
+		{
+			var url="checkEmail.php?e=" + str;
+			postRequest(url)
+			//console.log(postRequest(url));
+			
+		}
+	</script>
+<head>
+
+<body>
+	
+	<div class="container"> 
+			<div id="showErr" class="alert alert-danger" style="display:none;">
+
+			</div>
+		<div>
+			<form class="form-horizontal" method="POST" onsubmit="return submitt()" action="add.php">
+					<div class="form-group">
+							<label class="control-label col-sm-2" for="fn">First_Name:</label>
+							<div class="col-sm-10">
+							  <input type="text" class="form-control" id="fn" name="firstName">
+							</div>
+					</div>
+					<div class="form-group">
+							<label class="control-label col-sm-2" for="ln">Last_Name:</label>
+							<div class="col-sm-10">
+							  <input type="text" class="form-control" id="ln" name="lastName">
+							</div>
+					</div>
+					<div class="form-group">
+							<label class="control-label col-sm-2" for="phone">Phone:</label>
+							<div class="col-sm-10">
+							  <input type="text" class="form-control" id="phone" name="phone">
+							</div>
+					</div>
+					<div class="form-group">
+							<label class="control-label col-sm-2" for="email">Email:</label>
+							<div class="col-sm-10">
+							  <input type="text" class="form-control" name="email" id="email" onchange="emailCheck(this.value)">
+							</div>
+					</div>
+					<div  class="form-group">
+							
+							<div id = "emailChecker" class="col-sm-12">
+						
+							</div>
+					</div>
+					<div class="form-group">
+							<label class="control-label col-sm-2" for="pass">Password:</label>
+							<div class="col-sm-10">
+							  <input type="text" class="form-control" id="pass" name="pass">
+							</div>
+					</div>
+					
+					<div class="form-group">
+							<label class="control-label col-sm-2" for="rePass">Re_Password:</label>
+							<div class="col-sm-10">
+							  <input type="text" class="form-control" id="rePass" name="rePass">
+							</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-10">
+								<button type="submit" class="btn btn-default">Submit</button>
+						</div>
+					</div>
+					
+
+				<!---
+				
+				
+				<table>
+					<tr>
+						<td>First Name</td>
+						<td ><input type="text" name="firstName" id="fn"></td>
+					</tr>
+					
+					<tr>
+						<td>Last Name</td>
+						<td><input type="text" name="lastName" id="ln"></td>
+					</tr>
+					
+					<tr>
+						<td>Phone</td>
+						<td><input type="text" name="phone" id="phone"></td>
+					</tr>
+					
+					<tr>
+						<td>Email</td>
+						<td><input type="text" name="email" id="email" onkeyup="emailCheck(this.value)"></td>
+						<td> 	
+							<div id = "emailChecker"> 
+							
+							</div>
+						</td>
+					</tr>
+					
+					<tr>
+						<td>Password</td>
+						<td><input type="pass" name="pass" id="pass"></td>
+					</tr>
+					
+					<tr>
+						<td>Confirm Password</td>
+						<td><input type="pass" name="rePass" id="rePass"></td>
+					</tr>
+					
+					<tr>
+						<td><input type="submit" ></td>
+					</tr>
+				<table>
+			
+		-->
+	</form>
+</div>
+</div>
+</body>
+</html>
